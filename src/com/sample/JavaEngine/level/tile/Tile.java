@@ -5,6 +5,7 @@ import com.sample.JavaEngine.graphics.Sprite;
 
 public class Tile {
 
+    public static Tile voidTile = new VoidTile(Sprite.voidSprite);
     public int x, y;
     public Sprite sprite;
 

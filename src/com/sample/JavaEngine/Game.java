@@ -2,6 +2,8 @@ package com.sample.JavaEngine;
 
 import com.sample.JavaEngine.graphics.Screen;
 import com.sample.JavaEngine.inputs.Keyboard;
+import com.sample.JavaEngine.level.Level;
+import com.sample.JavaEngine.level.RandomLevel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +32,7 @@ public class Game extends Canvas implements Runnable {
 
     private Screen screen;
     private Keyboard keyboard;
+    private Level level;
 
     //constructor
     public Game() {
@@ -38,6 +41,7 @@ public class Game extends Canvas implements Runnable {
 
         screen = new Screen(width, height);
         keyboard = new Keyboard();
+        level = new RandomLevel(64, 64);
 
         frame = new JFrame("Game");
         frame.setResizable(false);
@@ -110,7 +114,8 @@ public class Game extends Canvas implements Runnable {
         }
 
         screen.clear();
-        screen.render(x, y);
+        level.render(x, y, screen);
+
 
         //copy the pixels from the screen to the image
         for (int i = 0; i < pixels.length; i++) {
@@ -129,10 +134,10 @@ public class Game extends Canvas implements Runnable {
 
     private void update() {
         keyboard.update();
-        if(keyboard.up)  y++;
-        if(keyboard.down) y--;
-        if(keyboard.left) x++;
-        if(keyboard.right) x--;
+        if (keyboard.up) y--;
+        if (keyboard.down) y++;
+        if (keyboard.left) x--;
+        if (keyboard.right) x++;
     }
 
     //main method
