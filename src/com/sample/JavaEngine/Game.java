@@ -1,6 +1,7 @@
 package com.sample.JavaEngine;
 
 import com.sample.JavaEngine.graphics.Screen;
+import com.sample.JavaEngine.inputs.Keyboard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,7 @@ public class Game extends Canvas implements Runnable {
     private static int height = width / 16 * 9;
     private static int scale = 3;
 
+
     //creating the image we're going to edit pixels on
     private BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     private int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
@@ -27,6 +29,7 @@ public class Game extends Canvas implements Runnable {
     public JFrame frame;
 
     private Screen screen;
+    private Keyboard keyboard;
 
     //constructor
     public Game() {
@@ -34,6 +37,7 @@ public class Game extends Canvas implements Runnable {
         setPreferredSize(size);
 
         screen = new Screen(width, height);
+        keyboard = new Keyboard();
 
         frame = new JFrame("Game");
         frame.setResizable(false);
@@ -44,6 +48,8 @@ public class Game extends Canvas implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        //listening for key presses
+        addKeyListener(keyboard);
         //start the game
         start();
     }
@@ -73,6 +79,7 @@ public class Game extends Canvas implements Runnable {
         long timer = System.currentTimeMillis();
         int frames = 0;
         int updates = 0;
+        requestFocus();
         while (running) {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
@@ -103,7 +110,7 @@ public class Game extends Canvas implements Runnable {
         }
 
         screen.clear();
-        screen.render();
+        screen.render(x, y);
 
         //copy the pixels from the screen to the image
         for (int i = 0; i < pixels.length; i++) {
@@ -118,7 +125,14 @@ public class Game extends Canvas implements Runnable {
         bs.show();
     }
 
+    int x = 0 , y = 0;
+
     private void update() {
+        keyboard.update();
+        if(keyboard.up)  y++;
+        if(keyboard.down) y--;
+        if(keyboard.left) x++;
+        if(keyboard.right) x--;
     }
 
     //main method

@@ -1,5 +1,8 @@
 package com.sample.JavaEngine.graphics;
 
+import com.sample.JavaEngine.level.tile.Tile;
+
+import java.util.Arrays;
 import java.util.Random;
 
 public class Screen {
@@ -21,21 +24,54 @@ public class Screen {
     }
 
     public void clear() {
-        for (int i = 0; i < pixels.length; i++){
-            pixels[i] = 0;
-        }
+        Arrays.fill(pixels, 0);
     }
 
-    public void render(){
+    public void render(int xOffset, int yOffset){
         for (int y = 0; y < height; y++){
-            int yy = y;
-            //if ( yy < 0 || yy >= height ) break;
+            int yp = y + yOffset;
+            if (yp < 0 || yp >= height) continue;
             for (int x = 0; x < width; x++){
-                int xx = x;
-                //if (xx < 0 || xx >= width) break;
-                int tileIndex = ((xx >> 4) & MAP_SIZE_MASK) + ((yy >> 4) & MAP_SIZE_MASK) * MAP_SIZE;
-                pixels[x + y * width] = tiles[tileIndex];
+                int xp = x + xOffset;
+                if (xp < 0 || xp >= width) continue;
+                pixels[xp + yp * width] = Sprite.grass.pixels[(x & 15) + (y & 15) * Sprite.grass.SIZE];
             }
         }
     }
+
+    public void renderTile(int xp, int yp, Tile tile){
+        for (int y = 0; y < tile.sprite.SIZE; y++){
+            int ya = y + yp;
+            for (int x = 0; x < tile.sprite.SIZE; x++){
+                int xa = x + xp;
+                if (xa < 0 || xa >= width || ya < 0 || ya >= width) break;
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
